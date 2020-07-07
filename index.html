@@ -1,230 +1,71 @@
-<div>
-        <div class="container">
-                <video controls id="video">
-                        <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.webm"
-                                type="video/webm">
-                        <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.mp4"
-                                type="video/mp4">
-                        Sorry, your browser doesn't support embedded videos.
-                </video>
-                <div class="transcripts"></div>
-        </div>
-        <input type="file" id="input" onchange="handleFiles(this.files)">
-</div>
-<style>
-        .container {
-                height: 600;
-                display: flex;
-                flex-direction: row;
-                align-content: flex-start;
-        }
-        .container  * {
-                margin: 10px;
-        }
-        video {
-                width: 60%;
-                background-color: black;
-        }
-        .transcripts {
-                overflow: auto;
-                width: 40%;
-                font-size: 22px;
-        }
-        .active {
-                font-weight: bold;
-                color: skyblue;
-        }
-
-        .transcripts  .hr {
-                background-color: #eee;
-                height: 1px;
-                width: 100%;
-                margin: 15px 0;
-        }
-
-        /* .transcripts span {
-                margin: 0;
-        } */
-        /*
-        .transcripts p:hover{
-                background-color: transparent;
-                color: black;
-        } */
-</style>
-<script>
-        const trans = document.getElementsByClassName("transcripts")[0];
-        const player = document.getElementById('video');
-
-        // get subtitle list
-        const subtitleList = [];
-        for (let i = 0; i < 100; i++) {
-                subtitleList.push({
-                        from: i + 0.123433,
-                        to: i + 1.123433,
-                        text: 'hello asdfqr asdfqerg asewf aefqwerdf afe' + i,
-                })
-        };
-
-        // append subtitle nodes
-        const appendSubtitleNodes = (subtitles) => {
-                let subtitleHtmlStr = '';
-                subtitles.map(item => {
-                        subtitleHtmlStr += (
-                                '<div id=' + item.from + '>' + 
-                                        '<span>' + item.text + '</span>' + 
-                                        '<div class="hr"></div>' + 
-                                '</div>'
-                        );
-                });
-                trans.innerHTML = subtitleHtmlStr;
-        }
-        appendSubtitleNodes(subtitleList);
-
-        // bind subtitle click & click right event
-        let videoPlaying = false;
-        let clickTimer = null;
-        trans.addEventListener('click', (e) => {
-                if (clickTimer) clearTimeout(clickTimer);
-                clickTimer = setTimeout(play, 300);
-                function play() {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const id = e.target.id || e.target.parentNode.id;
-
-                        subtitleList.map(item => {
-                                const node = document.getElementById(item.from);
-                                // 若处于时间区间内，则该节点激活
-                                if (item.from == id) {
-                                        node.className = 'active';
-                                        node.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
-                                } else {
-                                        // 否则删除激活标记
-                                        node.className = '';
-                                }
-                        });
-
-                        player.currentTime = parseFloat(id);
-                        player.play();
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Bolt</title>
+        </head>
+        <body>
+                <div class="container">
+                        <video controls id="video">
+                                <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.webm"
+                                        type="video/webm">
+                                <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.mp4"
+                                        type="video/mp4">
+                                Sorry, your browser doesn't support embedded videos.
+                        </video>
+                        <div class="transcripts"></div>
+                </div>
+                <input type="file" id="input" onchange="handleFiles(this.files)">
+                <script src="./js/parseSubtitle.js"></script>
+                <script src="./js/getFilePath.js"></script>
+                <script src="main.js"></script>
+        </body>
+        <style>
+                .container {
+                        height: 600px;
+                        display: flex;
+                        flex-direction: row;
+                        align-content: flex-start;
                 }
-        });
-        trans.addEventListener('dblclick', () => {
-                clearTimeout(clickTimer);
-        });
-        trans.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                if (videoPlaying) player.pause();
-                else player.play();
-        });
+                .container * {
+                        margin: 10px;
+                }
+                video {
+                        width: 60%;
+                        background-color: black;
+                }
+                .transcripts {
+                        overflow: auto;
+                        width: 40%;
+                        font-size: 18px;
+                        font-family: Roboto,sans-serif;
+                        height: 100%;
+                }
+                .active {
+                        font-weight: bold;
+                        color: skyblue;
+                }
 
-        let ankerSubtitleTimer;
-        player.onplay = () => {
-                videoPlaying = true;
-                ankerSubtitle(player, subtitleList);
-                ankerSubtitleTimer = setInterval(() => ankerSubtitle(player, subtitleList), 1000);
-        };
+                .transcripts  .hr {
+                        background-color: #eee;
+                        height: 1px;
+                        width: 100%;
+                        margin: 15px 0;
+                }
 
-        player.onpause = () => {
-                videoPlaying = false;
-                clearInterval(ankerSubtitleTimer);
-        }
+                .transcripts .minor-subtitle {
+                        font-size: 14px;
+                        color: #666;
+                }
 
-        const ankerSubtitle = (player, subtitleList) => {
-                const curTime = player.currentTime;
-                subtitleList.map(item => {
-                        const node = document.getElementById(item.from);
-
-                        const nodeStartSecs = parseFloat(item.from);
-                        const nodeEndSecs = parseFloat(item.to);
-
-                        // 若处于时间区间内，则该节点激活
-                        if (nodeStartSecs <= curTime && nodeEndSecs > curTime) {
-                                node.className = 'active';
-                                // 移动
-                                node.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
-                        } else {
-                                // 否则删除激活标记
-                                node.className = '';
-                        }
-                })
-        }
-
-
-        function handleFiles(selectedFiles) {
-            const selectedFile = selectedFiles[0];
-
-            var name = selectedFile.name;//读取选中文件的文件名
-            console.log("文件名: "+name);
-
-            // 获取文件路径
-                const filePath = getvl(selectedFiles);
-                console.log(filePath)
-
-            var reader = new FileReader(); // 创建一个 FR 对象
-            reader.readAsText(selectedFile); //读取文件的内容
-            reader.onload = function () {
-                //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
-                const sbtStr = this.result;
-                console.log(sbtStr);
-            }
-        }
-
-
-
-        function readFileFirefox(fileBrowser) {
-        try {
-            netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
-        }
-        catch (e) {
-            alert('无法访问本地文件，由于浏览器安全设置。为了克服这一点，请按照下列步骤操作：(1)在地址栏输入"about:config";(2) 右键点击并选择 New->Boolean; (3) 输入"signed.applets.codebase_principal_support" （不含引号）作为一个新的首选项的名称;(4) 点击OK并试着重新加载文件');
-            return;
-        }
-        var fileName=fileBrowser.value; //这一步就能得到客户端完整路径。下面的是否判断的太复杂，还有下面得到ie的也很复杂。
-        var file = Components.classes["@mozilla.org/file/local;1"]
-            .createInstance(Components.interfaces.nsILocalFile);
-        try {
-            // Back slashes for windows
-            file.initWithPath( fileName.replace(/\//g, "\\\\") );
-        }
-        catch(e) {
-            if (e.result!=Components.results.NS_ERROR_FILE_UNRECOGNIZED_PATH) throw e;
-            alert("File '" + fileName + "' cannot be loaded: relative paths are not allowed. Please provide an absolute path to this file.");
-            return;
-        }
-        if ( file.exists() == false ) {
-            alert("File '" + fileName + "' not found.");
-            return;
-        }
-        return file.path;
-    }
-
-
-    //根据不同浏览器获取路径
-    function getvl(obj){
-        //判断浏览器
-        var Sys = {};
-        var ua = navigator.userAgent.toLowerCase();
-        var s;
-        (s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
-            (s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
-                (s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
-                    (s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
-                        (s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
-        var file_url="";
-        if(Sys.ie<="6.0"){
-            //ie5.5,ie6.0
-            file_url = obj.value;
-        }else if(Sys.ie>="7.0"){
-            //ie7,ie8
-            obj.select();
-            file_url = document.selection.createRange().text;
-        }else if(Sys.firefox){
-            //fx
-            //file_url = document.getElementById("file").files[0].getAsDataURL();//获取的路径为FF识别的加密字符串
-            file_url = readFileFirefox(obj);
-        }else if(Sys.chrome){
-            file_url = obj.value;
-        }
-        //alert(file_url);
-        document.getElementById("text").innerHTML="获取文件域完整路径为："+file_url;
-    }
-</script>
+                .transcripts span {
+                        display: block;
+                }
+                /*
+                .transcripts p:hover{
+                        background-color: transparent;
+                        color: black;
+                } */
+        </style>
+</html>
