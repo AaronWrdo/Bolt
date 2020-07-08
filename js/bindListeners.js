@@ -1,8 +1,7 @@
 
 // bind subtitle click & click right event
-let videoPlaying = false;
 let clickTimer = null;
-let ankerSubtitleTimer;
+let ankerSubtitleTimer = null;
 let activeNodeIndex = -1;
 
 function onVideoLoaded() {
@@ -10,7 +9,6 @@ function onVideoLoaded() {
 }
 
 function onVideoAndTransLoaded() {
-    ankerSubtitle();
     trans.addEventListener('click', onClickTranscript);
     trans.addEventListener('dblclick', onDoubleClickTranscript);
     trans.addEventListener('contextmenu', onClickTranscriptWithRightKey);
@@ -19,6 +17,12 @@ function onVideoAndTransLoaded() {
     player.addEventListener('pause', onPlayerPause);
 
     document.addEventListener('keydown', handleTranscriptShortcut);
+
+    if (!player.paused) {
+        ankerSubtitle();
+        if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
+        ankerSubtitleTimer = setInterval(() => ankerSubtitle(), 1000);
+    }
 }
 
 function onClickTranscript(e) {
@@ -55,18 +59,17 @@ function onDoubleClickTranscript() {
 
 function onClickTranscriptWithRightKey(e) {
     e.preventDefault();
-    if (videoPlaying) player.pause();
+    if (!player.paused) player.pause();
     else player.play();
 }
 
 function onPlayerPlay() {
-    videoPlaying = true;
     ankerSubtitle();
+    if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
     ankerSubtitleTimer = setInterval(() => ankerSubtitle(), 1000);
 }
 
 function onPlayerPause() {
-    videoPlaying = false;
     clearInterval(ankerSubtitleTimer);
 }
 
@@ -97,14 +100,8 @@ function handleVideoShortcut(event) {
 
     // 按 d D
     if (e && e.keyCode == 68) {
-        if (videoPlaying) {
-            player.pause();
-            videoPlaying = false;
-        }
-        else {
-            player.play();
-            videoPlaying = true;
-        }
+        if (!player.paused) player.pause();
+        else player.play();
     }
 
      // 按 s S

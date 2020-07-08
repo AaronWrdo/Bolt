@@ -25,7 +25,7 @@ function handleFiles(selectedFiles) {
         // 视频文件
         case 'mp4': case 'mkv': {
             let url = URL.createObjectURL(file);
-            appenVideo(url);
+            appendVideo(url);
             onVideoLoaded();
             if (subtitleList.length > 0) onVideoAndTransLoaded();
         }; break;
@@ -35,7 +35,7 @@ function handleFiles(selectedFiles) {
 }
 
 // append video 
-function appenVideo(url) {
+function appendVideo(url) {
     player.removeAttribute("src");
     player.src = url;
     player.onload = function () {
