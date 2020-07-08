@@ -27,6 +27,8 @@ function handleFiles(selectedFiles) {
             let url = URL.createObjectURL(file);
             appendVideo(url);
             onVideoLoaded();
+            const title = document.getElementById('title');
+            title.textContent = fileName;
             if (subtitleList.length > 0) onVideoAndTransLoaded();
         }; break;
 
@@ -36,6 +38,8 @@ function handleFiles(selectedFiles) {
 
 // append video 
 function appendVideo(url) {
+    player.className = '';
+    player.parentNode.childNodes[1].className = 'hidden';
     player.removeAttribute("src");
     player.src = url;
     player.onload = function () {
@@ -46,15 +50,16 @@ function appendVideo(url) {
 // append subtitle nodes
 const appendSubtitleNodes = (subtitles) => {
     let subtitleHtmlStr = '';
-    subtitles.map(item => {
+    subtitles.map((item, index) => {
+        const len = subtitleList.length;
         if (item.text1.length == 0 && item.text2.length == 0) subtitleHtmlStr += '';
         else subtitleHtmlStr += (
-                    '<div id=' + item.from + '>' + 
-                            '<span class="major-subtitle">' + item.text2 + '</span>' + 
-                            '<span class="minor-subtitle">' + item.text1 + '</span>' + 
-                            '<div class="hr"></div>' + 
-                    '</div>'
-            );
+            '<div id=' + item.from + '>' + 
+                    '<span class="major-subtitle">' + item.text2 +  '</span>' + 
+                    '<span class="minor-subtitle">' + item.text1 + ' (' + (index+1) + '/' + len + ')' + '</span>' + 
+            '</div>'
+        );
     });
+    trans.className += ' scroll';
     trans.innerHTML = subtitleHtmlStr;
 }
