@@ -1,6 +1,5 @@
 const player = document.getElementById("video");
 const trans = document.getElementsByClassName("transcripts")[0];
-let playerLoad = false;
 let subtitleList = [];
 
 function handleFiles(selectedFiles) {
@@ -19,7 +18,7 @@ function handleFiles(selectedFiles) {
                 const sbtStr = this.result;
                 subtitleList = parse(sbtStr, fileType); // 解析文件内容，获得字幕 list
                 appendSubtitleNodes(subtitleList); // 挂载字幕节点
-                if (player.src) bindListeners();
+                if (player.src) onVideoAndTransLoaded();
             }
         }; break;
 
@@ -27,8 +26,8 @@ function handleFiles(selectedFiles) {
         case 'mp4': case 'mkv': {
             let url = URL.createObjectURL(file);
             appenVideo(url);
-            playerLoad = true;
-            if (subtitleList.length > 0) bindListeners();
+            onVideoLoaded();
+            if (subtitleList.length > 0) onVideoAndTransLoaded();
         }; break;
 
         default: alert('不支持的文件类型！');
