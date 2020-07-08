@@ -8,22 +8,30 @@
         <body>
                 <div class="container">
                         <video controls id="video">
-                                <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.webm"
+                                <!-- <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.webm"
                                         type="video/webm">
                                 <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.mp4"
-                                        type="video/mp4">
+                                        type="video/mp4"> -->
                                 Sorry, your browser doesn't support embedded videos.
                         </video>
                         <div class="transcripts"></div>
                 </div>
+                <div class="control">
+                        <div class="changeDiv">
+                                <span>速度 x</span>
+                                <input id="velocity" type="number" value="1.0" step="0.1" min="0" max="2">
+                        </div>
+                        <button onclick="handleAddShield()" id="addShield">添加字幕遮挡</button>
+                </div>
                 <input type="file" id="input" onchange="handleFiles(this.files)">
                 <script src="./js/parseSubtitle.js"></script>
                 <script src="./js/getFilePath.js"></script>
+                <script src="./js/shieldBar.js"></script>
                 <script src="main.js"></script>
         </body>
         <style>
                 .container {
-                        height: 600px;
+                        height: 500px;
                         display: flex;
                         flex-direction: row;
                         align-content: flex-start;
@@ -31,6 +39,19 @@
                 .container * {
                         margin: 10px;
                 }
+
+                .container .shield {
+                        background-color: skyblue;
+                        width: 400px;
+                        height: 40px;
+                        /* border: 1px burlywood solid; */
+                        border-radius: 10px;
+                }
+
+                .container .shield-container {
+                        position: absolute;
+                }
+
                 video {
                         width: 60%;
                         background-color: black;
@@ -41,10 +62,6 @@
                         font-size: 18px;
                         font-family: Roboto,sans-serif;
                         height: 100%;
-                }
-                .active {
-                        font-weight: bold;
-                        color: skyblue;
                 }
 
                 .transcripts  .hr {
@@ -59,6 +76,11 @@
                         color: #666;
                 }
 
+                .transcripts .active > * {
+                        font-weight: bold;
+                        color: skyblue;
+                }
+
                 .transcripts span {
                         display: block;
                 }
@@ -67,5 +89,14 @@
                         background-color: transparent;
                         color: black;
                 } */
+
+                .control .changeDiv input {
+                        font-size: 1em;
+                        opacity: 0.8;
+                        padding: 0.2em;
+                        border: 1px #bed8df solid;
+                        color: #000000;
+                        border-radius: 10px;
+                }
         </style>
 </html>

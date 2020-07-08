@@ -1,19 +1,23 @@
 function parse(sbtStr, type) {
     switch (type) {
         case 'ass': return parseAss(sbtStr);
-        case 'srt': break;
+        case 'srt': return parseSrt(subStr);
         default: break;
     }
     return [];
 }
 
-function parseAss(sbtStr) {
+function parseAss(subtitle) {
     try {
-        let lines = []; // 最终结果
-        const dialogues = sbtStr.match(/Dialogue.+\r\n/g);
+        let lines = []; // result
+
+        // split into dialogues
+        const dialogues = subtitle.match(/Dialogue.+\r\n/g);
         if (dialogues.length <= 0) throw Error('匹配出错！');
+
+        // do with every dialogue
         dialogues.map(dialogue => {
-            // filter desc lines
+            // filter desc dialogue
             if ( /0\,0\,0\,/g.test(dialogue) ) return; // remove lines with '0, 0, 0,'
             if ( /\,{2}\{/g.test(dialogue) ) return; // remove lines with '{\xxx'
 
@@ -42,6 +46,11 @@ function parseAss(sbtStr) {
     } catch (e) {
         console.log(e);
     }
+}
+
+
+function parseSrt(subtitle) {
+    console.log(subtitle);
 }
 
 function slot2Secs(str) {

@@ -22,14 +22,36 @@ function handleFiles(selectedFiles) {
 
         // 视频文件
         case 'mp4': {
-            // 获取文件路径
-            // const filePath = getvl(selectedFiles);
-            // console.log(filePath);
+            let url = URL.createObjectURL(file);
+            console.log(url);
+            const video = document.getElementById('video');
+            video.src = url;
+            // after video loaded, release the url obj
+            video.onload = function () {
+                window.URL.revokeObjectURL(src); 
+            };
         } break;
 
         default: alert('不支持的文件类型！');
     }
 }
+
+// handle control
+let veloChangeTimer = null;
+const velocity = document.getElementById('velocity');
+velocity.addEventListener('input', e => {
+    if (veloChangeTimer) clearTimeout(veloChangeTimer);
+    veloChangeTimer = setTimeout(() => {
+        let value = parseFloat(e.srcElement.value) || 1.0;
+        if (value > 2) value = 2.0;
+        if (value <= 0) value = 1.0;
+        player.playbackRate = value;
+        velocity.value = value;
+    }, 600);
+});
+
+// append video 
+
 
 
 // append subtitle nodes
