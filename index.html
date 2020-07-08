@@ -42,15 +42,17 @@
                         margin: 0 5px;
                 }
 
+                .container .shield-container {
+                        position: absolute;
+                }
+
                 .container .shield {
                         background-color: skyblue;
                         width: 400px;
                         height: 40px;
                         border-radius: 10px;
-                }
-
-                .container .shield-container {
-                        position: absolute;
+                        resize: both;
+                        overflow: auto;
                 }
 
                 /* 
@@ -115,14 +117,15 @@
                 }
 
                 .file-choser {
+                        display: inline-block;
                         border: 3px #eee dashed;
-                        border-radius: 3px;
+                        border-radius: 5px;
                 }
                 .file-choser:hover {
                         border: 3px skyblue dashed;
                 }
                 .file-choser .file {
-                        /* visibility: collapse; */
+                        padding: 5px 10px;
                 }
         </style>
 </html>
