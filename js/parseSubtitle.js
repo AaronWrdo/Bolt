@@ -1,7 +1,7 @@
 function parse(sbtStr, type) {
     switch (type) {
         case 'ass': return parseAss(sbtStr);
-        case 'srt': return parseSrt(subStr);
+        case 'srt': return parseSrt(sbtStr);
         default: break;
     }
     return [];
@@ -50,7 +50,7 @@ function parseAss(subtitle) {
 
 
 function parseSrt(subtitle) {
-    console.log(subtitle);
+    // console.log(subtitle);
 }
 
 function slot2Secs(str) {

@@ -7,13 +7,11 @@
         </head>
         <body>
                 <div class="container">
-                        <video controls id="video">
-                                <!-- <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.webm"
-                                        type="video/webm">
-                                <source src="/users/weilai/movies/mfs09/摩登家庭.Modern.Family.S09E02.中英字幕.WEB.720p-人人影视.mp4"
-                                        type="video/mp4"> -->
-                                Sorry, your browser doesn't support embedded videos.
-                        </video>
+                        <div class="video-wrapper">
+                                <video controls id="video">
+                                        Sorry, your browser doesn't support embedded videos.
+                                </video>
+                        </div>
                         <div class="transcripts"></div>
                 </div>
                 <div class="control">
@@ -23,21 +21,25 @@
                         </div>
                         <button onclick="handleAddShield()" id="addShield">添加字幕遮挡</button>
                 </div>
-                <input type="file" id="input" onchange="handleFiles(this.files)">
+                <div class="file-choser">
+                        <input type="file" onchange="handleFiles(this.files)" class="file" />
+                </div>
                 <script src="./js/parseSubtitle.js"></script>
-                <script src="./js/getFilePath.js"></script>
+                <script src="./js/veloController.js"></script>
                 <script src="./js/shieldBar.js"></script>
+                <script src="./js/bindListeners.js"></script>
                 <script src="main.js"></script>
         </body>
         <style>
                 .container {
                         height: 500px;
+                        min-width: 800px;
                         display: flex;
                         flex-direction: row;
                         align-content: flex-start;
                 }
-                .container * {
-                        margin: 10px;
+                .container > * {
+                        margin: 0 5px;
                 }
 
                 .container .shield {
@@ -52,10 +54,25 @@
                         position: absolute;
                 }
 
-                video {
+                /* 
+                    video 
+                */
+                .video-wrapper {
                         width: 60%;
+                        height: 100%;
+                        background-color: skyblue;
+                }
+
+                .video-wrapper video {
+                        margin: 0;
+                        width: 100%;
+                        height: 100%;
                         background-color: black;
                 }
+
+                /* 
+                    .transcripts 
+                */
                 .transcripts {
                         overflow: auto;
                         width: 40%;
@@ -84,12 +101,10 @@
                 .transcripts span {
                         display: block;
                 }
-                /*
-                .transcripts p:hover{
-                        background-color: transparent;
-                        color: black;
-                } */
 
+                /* 
+                    control 
+                */
                 .control .changeDiv input {
                         font-size: 1em;
                         opacity: 0.8;
@@ -97,6 +112,17 @@
                         border: 1px #bed8df solid;
                         color: #000000;
                         border-radius: 10px;
+                }
+
+                .file-choser {
+                        border: 3px #eee dashed;
+                        border-radius: 3px;
+                }
+                .file-choser:hover {
+                        border: 3px skyblue dashed;
+                }
+                .file-choser .file {
+                        /* visibility: collapse; */
                 }
         </style>
 </html>
