@@ -5,6 +5,7 @@
                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <title>Bolt</title>
                 <link rel="icon" href="./logo.svg" type="image/x-icon"/>
+                <link rel="stylesheet" href="http://cdn.staticfile.org/normalize/3.0.1/normalize.min.css" type="text/css" />
         </head>
         <body>
                 <nav>
@@ -12,29 +13,50 @@
                                 <svg class="icon" aria-hidden="true">
                                         <use xlink:href="#icon-shandian"></use>
                                 </svg>
-                                <h3>Bolt</h3>
+                                <h1>Bolt</h1>
                         </div>
                         <ul class="nav-right">
                                 <li><a>使用说明</a></li>
-                                <li><a>快捷键</a></li>
+                                <li><a>
+                                        <svg class="icon" aria-hidden="true">
+                                                <use xlink:href="#icon-rijianmoshi"></use>
+                                        </svg>
+                                        <svg class="icon hidden" aria-hidden="true">
+                                                <use xlink:href="#icon-yejianmoshi"></use>
+                                        </svg>
+                                </a></li>
                         </ul>
                 </nav>
                 <h3 id="title"></h3>
                 <main class="container">
                         <div class="video-wrapper">
-                                <label for="file" class="file-choser"></label>
+                                <label for="file" class="file-choser">
+                                        <div class="file-choser-desc">
+                                                <svg class="icon" aria-hidden="true">
+                                                        <use xlink:href="#icon-dianying"></use>
+                                                </svg>
+                                                <p>点击添加文件</p>
+                                        </div>
+                                </label>
                                 <video controls id="video" class="hidden">
                                         Sorry, your browser doesn't support embedded videos.
                                 </video>
                         </div>
                         <div class="transcripts">
-                                <label for="file" class="file-choser"></label>
+                                <label for="file" class="file-choser">
+                                        <div class="file-choser-desc">
+                                                <svg class="icon" aria-hidden="true">
+                                                        <use xlink:href="#icon-jishiben"></use>
+                                                </svg>
+                                                <p>点击添加文件</p>
+                                        </div>
+                                </label>
                         </div>
                 </main>
                 <footer class="control">
                         <div class="changeDiv">
-                                <span>速度 x</span>
-                                <input id="velocity" type="number" value="1.0" step="0.1" min="0" max="2">
+                                速度 x
+                                <input label="速度" id="velocity" type="number" value="1.0" step="0.1" min="0" max="2" />
                         </div>
                         <button onclick="handleAddShield()" id="addShield">添加字幕遮挡</button>
                         <button onclick="">字幕设置</button>
@@ -58,20 +80,22 @@
                         margin: 0px;
                         box-sizing: border-box;
                         font-family: Georgia, serif, "Gill Sans";
+                        font-size: 14px;
                 }
 
                 nav {
-                        width: 100%;
+                        min-width: 800px;
                         height: 45px;
                         line-height: 45px;
                         color: #fff;
-                        background-color: rgba(34, 33, 33, 0.87);
-                        box-shadow: 0px 1px 5px rgba(34, 33, 33, 0.87);
+                        background-color: #434343;
+                        box-shadow: 0px 1px 5px #434343;
                 }
 
-                .nav-left h3 {
-                        font-family: cursive;
+                .nav-left h1 {
                         float: left;
+                        font-size: 20px;
+                        font-family: cursive;
                 }
 
                 .nav-left svg {
@@ -101,16 +125,17 @@
                 }
 
                 li a:hover {
-                        background-color: #666;
+                        background-color: #595959;
                 }
 
                 #title {
                         margin: 18px;
                         color: #444;
+                        font-size: 18px;
                 }
 
                 .container {
-                        height: 420px;
+                        height: 440px;
                         min-width: 800px;
                         display: flex;
                         flex-direction: row;
@@ -160,7 +185,6 @@
                 */
                 .transcripts {
                         width: 40%;
-                        font-size: 18px;
                         height: 100%;
                 }
 
@@ -174,14 +198,17 @@
                         border-bottom: 1px #eee solid;
                 }
 
+                .transcripts .major-subtitle {
+                        font-size: 18px;
+                }
+
                 .transcripts .minor-subtitle {
-                        font-size: 14px;
                         color: #999;
                 }
 
                 .transcripts .active > * {
                         font-weight: bold;
-                        color: skyblue;
+                        color: #40a9ff;
                 }
 
                 .transcripts span {
@@ -195,20 +222,72 @@
                         border: 3px #eee dashed;
                         border-radius: 5px;
                 }
+
                 .file-choser:hover {
-                        border: 3px skyblue dashed;
+                        border: 3px #69c0ff dashed;
+                }
+
+                .file-choser-desc {
+                        text-align: center;
+                        color: #ddd;
+                        position: relative;
+                        top: 50%;
+                        transform: translateY(-50%);
+                }
+
+                .file-choser-desc * {
+                        font-size: 22px;
+                        margin: 5px 0;
                 }
 
                 /* 
                     control 
                 */
+                .control {
+                        margin: 20px;
+                        min-width: 600px;
+                        display: flex;
+                        justify-content: flex-start;
+                        flex-wrap: wrap;
+                }
+                .control > * {
+                        margin: 8px;
+                        width: 150px;
+                        height: 34px;
+                        text-align:center;
+                        vertical-align:middle;
+                }
+
+                .control .changeDiv {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 4px;
+                }
+
                 .control .changeDiv input {
-                        font-size: 1em;
-                        opacity: 0.8;
-                        padding: 0.2em;
-                        border: 1px #bed8df solid;
-                        color: #000000;
-                        border-radius: 10px;
+                        height: 34px;
+                        width: 90px;
+                        font-size: 1.2em;
+                        padding: 0 20px;
+                        border-radius: 34px;
+                        border: 2px #1890ff solid;
+                }
+
+                .control .changeDiv input:hover {
+                        border-color: #40a9ff;
+                }
+
+                .control button {
+                        color: #fff;
+                        background-color: #1890ff;
+                        border: 2px #1890ff solid;
+                        border-radius: 34px;
+                }
+
+                .control button:hover {
+                        background-color: #40a9ff;
+                        border-color: #40a9ff;
                 }
 
                 #file {
@@ -219,12 +298,11 @@
                         iconfont 使用，重要
                 */
                 .icon {
-                width: 1em;
-                height: 1em;
-                vertical-align: -0.15em;
-                fill: currentColor;
-                overflow: hidden;
+                        width: 1em;
+                        height: 1em;
+                        vertical-align: -0.15em;
+                        fill: currentColor;
+                        overflow: hidden;
                 }
-
         </style>
 </html>

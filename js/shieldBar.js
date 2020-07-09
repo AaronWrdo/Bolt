@@ -24,8 +24,8 @@ function addShield() {
     shieldContainer.className = 'shield-container';
     shieldContainer.appendChild(shield);
     shieldContainer.draggable = true;
-    shieldContainer.style.top = '0px';
-    shieldContainer.style.left = '0px';
+    shieldContainer.style.top = '420px';
+    shieldContainer.style.left = '100px';
     shieldContainer.addEventListener('dragstart', handleStartDragShield);
 
     container.appendChild(shieldContainer);
