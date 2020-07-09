@@ -1,6 +1,5 @@
 let shield;
 let shieldContainer;
-let container = document.getElementsByClassName('container')[0];
 let addShieldBtn = document.getElementById('addShield');
 let flag = false;
 
@@ -23,51 +22,56 @@ function addShield() {
     shieldContainer = document.createElement("div");
     shieldContainer.className = 'shield-container';
     shieldContainer.appendChild(shield);
-    shieldContainer.draggable = true;
     shieldContainer.style.top = '420px';
     shieldContainer.style.left = '100px';
+    shieldContainer.draggable = true;
     shieldContainer.addEventListener('dragstart', handleStartDragShield);
 
-    container.appendChild(shieldContainer);
+    document.body.appendChild(shieldContainer);
 }
 
 function deleteShield() {
-    shieldContainer.removeEventListener('dragstart', handleStartDragShield);
     shieldContainer.removeChild(shield);
-    container.removeChild(shieldContainer);
-    shieldContainer = null;
+    shieldContainer.removeEventListener('dragstart', handleStartDragShield);
     shield = null;
+
+    document.body.removeChild(shieldContainer);
+    shieldContainer = null;
 }
 
 const mouse = {};
 const bar = {};
 function handleStartDragShield(e) {
-    // e.preventDefault();
-
     //记录鼠标点击的坐标
     mouse.startX = e.pageX;
     mouse.startY = e.pageY;
 
     // 记录遮挡条的坐标
     bar.left = parseInt(shieldContainer.style.left.slice(0, -2));
-    bar.top = parseInt(shieldContainer.style.top.slice(0, -2)); 
+    bar.top = parseInt(shieldContainer.style.top.slice(0, -2));
 
-    shieldContainer.addEventListener('dragover', handleDragShield);
-    shieldContainer.addEventListener('dragend', handleDropShield);
+    // body 开始监听 ShieldBar的拖放
+    document.body.addEventListener('dragover', handleDragover);
+    document.body.addEventListener('drop', handlDrop);
 }
 
-function handleDragShield(e) {
+function handleDragover(e) {
+    e.preventDefault();
+};
+
+function handlDrop(e) {
+    e.preventDefault();
+
     mouse.currentX = e.pageX; //获取鼠标移动后的坐标
     mouse.currentY = e.pageY;
     
-	var disX = mouse.currentX - mouse.startX; //获取物体应该移动的距离
-    var disY = mouse.currentY - mouse.startY;
+	let disX = mouse.currentX - mouse.startX; //获取物体应该移动的距离
+    let disY = mouse.currentY - mouse.startY;
     
     shieldContainer.style.left = bar.left + disX + 'px';
     shieldContainer.style.top = bar.top + disY + 'px';
-}
 
-function handleDropShield() {
-    document.removeEventListener('dragover', handleDragShield); //移除文档对象的鼠标移动和鼠标弹起监听事件
-	document.removeEventListener('dragend', handleDropShield);
-}
+    // body 移除监听 ShieldBar的拖放
+    document.body.removeEventListener('dragover', handleDragover);
+    document.body.removeEventListener('drop', handlDrop);
+} 

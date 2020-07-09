@@ -2,10 +2,28 @@ const player = document.getElementById("video");
 const trans = document.getElementsByClassName("transcripts")[0];
 let subtitleList = [];
 
-function handleFiles(selectedFiles) {
-    const file = selectedFiles[0];
-    var fileName = file.name;
-    let fileType = fileName.split('.').pop(); // 获取文件类型
+init();
+
+function init() {
+    const fileInput = document.getElementById('file');
+    fileInput.addEventListener('change', () => handleFile(fileInput.files[0]));
+
+    const fileChosers = document.getElementsByClassName('file-choser');
+    [...fileChosers].map(fc => {
+        fc.addEventListener('drop', handleDropFile);
+    });
+}
+
+function handleDropFile(e) {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0]; //获取拖拽的文件列表
+    handleFile(file);
+}
+
+function handleFile(file) {
+    if (!file) return;
+    const fileName = file.name;
+    const fileType = fileName.split('.').pop(); // 获取文件类型
 
     switch (fileType) {
         // 读取并解析字幕文件
@@ -23,7 +41,7 @@ function handleFiles(selectedFiles) {
         }; break;
 
         // 视频文件
-        case 'mp4': case 'mkv': {
+        case 'mp4': {
             let url = URL.createObjectURL(file);
             appendVideo(url);
             onVideoLoaded();
@@ -32,7 +50,7 @@ function handleFiles(selectedFiles) {
             if (subtitleList.length > 0) onVideoAndTransLoaded();
         }; break;
 
-        default: alert('不支持的文件类型！');
+        default: window.alert('不支持的文件类型！');
     }
 }
 
@@ -55,8 +73,8 @@ const appendSubtitleNodes = (subtitles) => {
         if (item.text1.length == 0 && item.text2.length == 0) subtitleHtmlStr += '';
         else subtitleHtmlStr += (
             '<div id=' + item.from + '>' + 
-                    '<span class="major-subtitle">' + item.text2 +  '</span>' + 
-                    '<span class="minor-subtitle">' + item.text1 + ' (' + (index+1) + '/' + len + ')' + '</span>' + 
+                    '<div class="major-subtitle">' + item.text2 +  '</div>' + 
+                    '<div class="minor-subtitle">' + item.text1 + ' (' + (index+1) + '/' + len + ')' + '</div>' + 
             '</div>'
         );
     });

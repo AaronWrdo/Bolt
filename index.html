@@ -6,6 +6,7 @@
                 <title>Bolt</title>
                 <link rel="icon" href="./logo.svg" type="image/x-icon"/>
                 <link rel="stylesheet" href="http://cdn.staticfile.org/normalize/3.0.1/normalize.min.css" type="text/css" />
+                <link rel="stylesheet" href="./css/main.css" type="text/css"/>
         </head>
         <body>
                 <nav>
@@ -35,7 +36,7 @@
                                                 <svg class="icon" aria-hidden="true">
                                                         <use xlink:href="#icon-dianying"></use>
                                                 </svg>
-                                                <p>点击添加文件</p>
+                                                <p>点击或拖拽添加文件</p>
                                         </div>
                                 </label>
                                 <video controls id="video" class="hidden">
@@ -48,7 +49,7 @@
                                                 <svg class="icon" aria-hidden="true">
                                                         <use xlink:href="#icon-jishiben"></use>
                                                 </svg>
-                                                <p>点击添加文件</p>
+                                                <p>点击或拖拽添加文件</p>
                                         </div>
                                 </label>
                         </div>
@@ -63,7 +64,8 @@
                         <button onclick="">快捷键设置</button>
                         <button><label for="file">重新选择文件</label></button>
                 </footer>
-                <input id="file" type="file" onchange="handleFiles(this.files)"/>
+                <input id="file" type="file" accept=".mp4, .ass"/>
+                
                 <script src="./js/parseSubtitle.js"></script>
                 <script src="./js/veloController.js"></script>
                 <script src="./js/shieldBar.js"></script>
@@ -71,238 +73,4 @@
                 <script src="./js/iconfont.js"></script>
                 <script src="main.js"></script>
         </body>
-        <style>
-                body {
-                        margin: 0;
-                }
-
-                body * {
-                        margin: 0px;
-                        box-sizing: border-box;
-                        font-family: Georgia, serif, "Gill Sans";
-                        font-size: 14px;
-                }
-
-                nav {
-                        min-width: 800px;
-                        height: 45px;
-                        line-height: 45px;
-                        color: #fff;
-                        background-color: #434343;
-                        box-shadow: 0px 1px 5px #434343;
-                }
-
-                .nav-left h1 {
-                        float: left;
-                        font-size: 20px;
-                        font-family: cursive;
-                }
-
-                .nav-left svg {
-                        height: 45px;
-                        font-size: 2em;
-                        float: left;
-                        margin: 0 10px 0 15px;
-                }
-
-                ul {
-                        list-style-type: none;
-                        margin: 0;
-                        padding: 0;
-                        float: right;
-                }
-
-                li {
-                        float: left;
-                }
- 
-                li a {
-                        display: block;
-                        text-align: center;
-                        padding: 0 20px;
-                        text-decoration: none;
-                        font-size: 16px;
-                }
-
-                li a:hover {
-                        background-color: #595959;
-                }
-
-                #title {
-                        margin: 18px;
-                        color: #444;
-                        font-size: 18px;
-                }
-
-                .container {
-                        height: 440px;
-                        min-width: 800px;
-                        display: flex;
-                        flex-direction: row;
-                        align-content: flex-start;
-                        margin: 15px;
-                }
-                .container .video-wrapper {
-                        margin: 0 15px 0 0;
-                }
-
-                .container .shield-container {
-                        position: absolute;
-                }
-
-                .container .shield {
-                        /* background-color: #F9BF55; */
-                        background-color: #fff;
-                        opacity: 0.98;
-                        width: 400px;
-                        height: 40px;
-                        border-radius: 10px;
-                        resize: both;
-                        overflow: auto;
-                }
-
-                .hidden {
-                        display: none;
-                }
-
-                /* 
-                    video 
-                */
-                .video-wrapper {
-                        width: 60%;
-                        height: 100%;
-                }
-
-                .video-wrapper video {
-                        margin: 0;
-                        width: 100%;
-                        height: 100%;
-                        background-color: #111;
-                }
-
-                /* 
-                    .transcripts 
-                */
-                .transcripts {
-                        width: 40%;
-                        height: 100%;
-                }
-
-                .scroll {
-                        overflow: auto;
-                }
-
-                .transcripts > div {
-                        padding: 15px 0;
-                        margin: 0 15px;
-                        border-bottom: 1px #eee solid;
-                }
-
-                .transcripts .major-subtitle {
-                        font-size: 18px;
-                }
-
-                .transcripts .minor-subtitle {
-                        color: #999;
-                }
-
-                .transcripts .active > * {
-                        font-weight: bold;
-                        color: #40a9ff;
-                }
-
-                .transcripts span {
-                        display: block;
-                }
-
-                .file-choser {
-                        display: block;
-                        width: 100%;
-                        height: 100%;
-                        border: 3px #eee dashed;
-                        border-radius: 5px;
-                }
-
-                .file-choser:hover {
-                        border: 3px #69c0ff dashed;
-                }
-
-                .file-choser-desc {
-                        text-align: center;
-                        color: #ddd;
-                        position: relative;
-                        top: 50%;
-                        transform: translateY(-50%);
-                }
-
-                .file-choser-desc * {
-                        font-size: 22px;
-                        margin: 5px 0;
-                }
-
-                /* 
-                    control 
-                */
-                .control {
-                        margin: 20px;
-                        min-width: 600px;
-                        display: flex;
-                        justify-content: flex-start;
-                        flex-wrap: wrap;
-                }
-                .control > * {
-                        margin: 8px;
-                        width: 150px;
-                        height: 34px;
-                        text-align:center;
-                        vertical-align:middle;
-                }
-
-                .control .changeDiv {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-                        padding: 4px;
-                }
-
-                .control .changeDiv input {
-                        height: 34px;
-                        width: 90px;
-                        font-size: 1.2em;
-                        padding: 0 20px;
-                        border-radius: 34px;
-                        border: 2px #1890ff solid;
-                }
-
-                .control .changeDiv input:hover {
-                        border-color: #40a9ff;
-                }
-
-                .control button {
-                        color: #fff;
-                        background-color: #1890ff;
-                        border: 2px #1890ff solid;
-                        border-radius: 34px;
-                }
-
-                .control button:hover {
-                        background-color: #40a9ff;
-                        border-color: #40a9ff;
-                }
-
-                #file {
-                        display: none;
-                }
-
-                /*
-                        iconfont 使用，重要
-                */
-                .icon {
-                        width: 1em;
-                        height: 1em;
-                        vertical-align: -0.15em;
-                        fill: currentColor;
-                        overflow: hidden;
-                }
-        </style>
 </html>
