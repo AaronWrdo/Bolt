@@ -1,8 +1,8 @@
-
 // bind subtitle click & click right event
 let clickTimer = null;
 let ankerSubtitleTimer = null;
 let activeNodeIndex = -1;
+const subListener = document.getElementById('choose-sub');
 
 function onVideoLoaded() {
     document.addEventListener('keydown', handleVideoShortcut);
@@ -17,6 +17,8 @@ function onVideoAndTransLoaded() {
     player.addEventListener('pause', onPlayerPause);
 
     document.addEventListener('keydown', handleTranscriptShortcut);
+
+    subListener.addEventListener('click', chooseSubtitle);
 
     if (!player.paused) {
         ankerSubtitle();
@@ -105,10 +107,28 @@ function handleVideoShortcut(event) {
     }
 
      // 按 s S
-    if (e && e.keyCode == 83) player.currentTime -= 2;
+    if (e && e.keyCode == 83) {
+        if (activeNodeIndex > 0) {
+            player.currentTime = subtitleList[activeNodeIndex-1].from;
+            activeNodeIndex--;
+        }
+        else if (activeNodeIndex == 0) {
+            player.currentTime = subtitleList[activeNodeIndex].from;
+        }
+        player.play();
+    }
 
     // 按 f F
-    if (e && e.keyCode == 70) player.currentTime += 2;
+    if (e && e.keyCode == 70) {
+        if (activeNodeIndex < subtitleList.length) {
+            player.currentTime = subtitleList[activeNodeIndex + 1].from;
+            activeNodeIndex++;
+        }
+        else if (activeNodeIndex == subtitleList.length) {
+            player.currentTime = subtitleList[activeNodeIndex].from;
+        }
+        player.play();
+    }
 }
 
 function handleTranscriptShortcut(e) {
@@ -121,27 +141,20 @@ function handleTranscriptShortcut(e) {
 
     // 按 w W
     if (e && e.keyCode == 87) {
-        if (activeNodeIndex > 0) {
-            player.currentTime = subtitleList[activeNodeIndex-1].from;
-            activeNodeIndex--;
-        }
-        else if (activeNodeIndex == 0) {
-            player.currentTime = subtitleList[activeNodeIndex].from;
-        }
+        player.currentTime -= 2;
     }
 
     // 按 r R
     if (e && e.keyCode == 82) {
-        if (activeNodeIndex < subtitleList.length) {
-            player.currentTime = subtitleList[activeNodeIndex + 1].from;
-            activeNodeIndex++;
-        }
-        else if (activeNodeIndex == subtitleList.length) {
-            player.currentTime = subtitleList[activeNodeIndex].from;
-        }
+        player.currentTime += 2;
     }
 
     if ( e && e.keyCode == 69 || e.keyCode == 87 || e.keyCode == 82) {
         player.play();
     }
+}
+
+
+function chooseSubtitle(e) {
+    console.log(e);
 }

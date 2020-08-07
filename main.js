@@ -73,8 +73,12 @@ const appendSubtitleNodes = (subtitles) => {
         if (item.text1.length == 0 && item.text2.length == 0) subtitleHtmlStr += '';
         else subtitleHtmlStr += (
             '<div id=' + item.from + '>' + 
-                    '<div class="major-subtitle">' + item.text2 +  '</div>' + 
-                    '<div class="minor-subtitle">' + item.text1 + ' (' + (index+1) + '/' + len + ')' + '</div>' + 
+                    '<div class="major-subtitle">' + 
+                        item.text2 + 
+                    '</div>' + 
+                    '<div class="minor-subtitle">' + 
+                        item.text1 + ' (' + (index+1) + '/' + len + ')' + 
+                    '</div>' + 
             '</div>'
         );
     });

@@ -63,9 +63,20 @@
                         <button onclick="">字幕设置</button>
                         <button onclick="">快捷键设置</button>
                         <button><label for="file">重新选择文件</label></button>
+                        <div id="choose-sub">
+                                <div>
+                                        主字幕
+                                        <input type="checkbox">字幕1</input>
+                                        <input type="checkbox">字幕2</input>
+                                </div>
+                                <div>
+                                        副字幕
+                                        <input type="checkbox">字幕1</input>
+                                        <input type="checkbox">字幕2</input>
+                                </div>
+                        </form>
                 </footer>
                 <input id="file" type="file" accept=".mp4, .ass"/>
-                
                 <script src="./js/parseSubtitle.js"></script>
                 <script src="./js/veloController.js"></script>
                 <script src="./js/shieldBar.js"></script>

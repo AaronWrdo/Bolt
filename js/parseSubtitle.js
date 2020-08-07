@@ -18,7 +18,7 @@ function parseAss(subtitle) {
         // do with every dialogue
         dialogues.map(dialogue => {
             // filter desc dialogue
-            if ( /0\,0\,0\,/g.test(dialogue) ) return; // remove lines with '0, 0, 0,'
+            // if ( /0\,0\,0\,/g.test(dialogue) ) return; // remove lines with '0, 0, 0,'
             if ( /\,{2}\{/g.test(dialogue) ) return; // remove lines with '{\xxx'
 
             // parse times
