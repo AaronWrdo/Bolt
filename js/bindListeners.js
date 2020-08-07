@@ -1,22 +1,31 @@
+import { player, trans } from './global.js';
+import { handleAddShield } from './shieldBar.js';
+
 // bind subtitle click & click right event
 let clickTimer = null;
 let ankerSubtitleTimer = null;
 let activeNodeIndex = -1;
 const subListener = document.getElementById('choose-sub');
+const addShieldBtn = document.getElementById('addShield');
+let subtitleList = [];
 
-function onVideoLoaded() {
-    document.addEventListener('keydown', handleVideoShortcut);
+export function onVideoLoaded() {
+    addShieldBtn.addEventListener('click', handleAddShield)
+    // document.addEventListener('keydown', _handleVideoShortcut);
 }
 
-function onVideoAndTransLoaded() {
-    trans.addEventListener('click', onClickTranscript);
-    trans.addEventListener('dblclick', onDoubleClickTranscript);
-    trans.addEventListener('contextmenu', onClickTranscriptWithRightKey);
+export function onVideoAndTransLoaded(subtitles) {
+    subtitleList = subtitles;
 
-    player.addEventListener('play', onPlayerPlay);
-    player.addEventListener('pause', onPlayerPause);
+    trans.addEventListener('click', _onClickTranscript);
+    trans.addEventListener('dblclick', _onDoubleClickTranscript);
+    trans.addEventListener('contextmenu', _onClickTranscriptWithRightKey);
 
-    document.addEventListener('keydown', handleTranscriptShortcut);
+    player.addEventListener('play', _onPlayerPlay);
+    player.addEventListener('pause', _onPlayerPause);
+
+    document.addEventListener('keydown', _handleTranscriptShortcut);
+    document.addEventListener('keydown', _handleVideoShortcut); // 需要subtitle list，暂时放这里
 
     subListener.addEventListener('click', chooseSubtitle);
 
@@ -27,7 +36,7 @@ function onVideoAndTransLoaded() {
     }
 }
 
-function onClickTranscript(e) {
+function _onClickTranscript(e) {
     if (clickTimer) clearTimeout(clickTimer);
     clickTimer = setTimeout(play, 300);
     function play() {
@@ -55,23 +64,23 @@ function onClickTranscript(e) {
     }
 }
 
-function onDoubleClickTranscript() {
+function _onDoubleClickTranscript() {
     clearTimeout(clickTimer);
 }
 
-function onClickTranscriptWithRightKey(e) {
+function _onClickTranscriptWithRightKey(e) {
     e.preventDefault();
     if (!player.paused) player.pause();
     else player.play();
 }
 
-function onPlayerPlay() {
+function _onPlayerPlay() {
     ankerSubtitle();
     if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
     ankerSubtitleTimer = setInterval(() => ankerSubtitle(), 1000);
 }
 
-function onPlayerPause() {
+function _onPlayerPause() {
     clearInterval(ankerSubtitleTimer);
 }
 
@@ -97,7 +106,7 @@ function ankerSubtitle() {
     });
 }
 
-function handleVideoShortcut(event) {
+function _handleVideoShortcut(event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
 
     // 按 d D
@@ -131,7 +140,7 @@ function handleVideoShortcut(event) {
     }
 }
 
-function handleTranscriptShortcut(e) {
+function _handleTranscriptShortcut(e) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
 
     // 按 e E

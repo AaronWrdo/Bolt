@@ -1,21 +1,21 @@
 let shield;
 let shieldContainer;
-let addShieldBtn = document.getElementById('addShield');
+let _addShieldBtn = document.getElementById('addShield');
 let flag = false;
 
-function handleAddShield() {
+export function handleAddShield() {
     if (!flag) {
         flag = true;
-        addShield();
-        addShieldBtn.textContent = '去除字幕遮挡';
+        _addShield();
+        _addShieldBtn.textContent = '去除字幕遮挡';
     } else {
         flag = false;
-        deleteShield();
-        addShieldBtn.textContent = '添加字幕遮挡';
+        _deleteShield();
+        _addShieldBtn.textContent = '添加字幕遮挡';
     }
 }
 
-function addShield() {
+function _addShield() {
     shield = document.createElement("div");
     shield.className = 'shield';
 
@@ -25,14 +25,14 @@ function addShield() {
     shieldContainer.style.top = '420px';
     shieldContainer.style.left = '100px';
     shieldContainer.draggable = true;
-    shieldContainer.addEventListener('dragstart', handleStartDragShield);
+    shieldContainer.addEventListener('dragstart', _handleStartDragShield);
 
     document.body.appendChild(shieldContainer);
 }
 
-function deleteShield() {
+function _deleteShield() {
     shieldContainer.removeChild(shield);
-    shieldContainer.removeEventListener('dragstart', handleStartDragShield);
+    shieldContainer.removeEventListener('dragstart', _handleStartDragShield);
     shield = null;
 
     document.body.removeChild(shieldContainer);
@@ -41,7 +41,7 @@ function deleteShield() {
 
 const mouse = {};
 const bar = {};
-function handleStartDragShield(e) {
+function _handleStartDragShield(e) {
     //记录鼠标点击的坐标
     mouse.startX = e.pageX;
     mouse.startY = e.pageY;
@@ -51,15 +51,15 @@ function handleStartDragShield(e) {
     bar.top = parseInt(shieldContainer.style.top.slice(0, -2));
 
     // body 开始监听 ShieldBar的拖放
-    document.body.addEventListener('dragover', handleDragover);
-    document.body.addEventListener('drop', handlDrop);
+    document.body.addEventListener('dragover', _handleDragover);
+    document.body.addEventListener('drop', _handleDrop);
 }
 
-function handleDragover(e) {
+function _handleDragover(e) {
     e.preventDefault();
 };
 
-function handlDrop(e) {
+function _handleDrop(e) {
     e.preventDefault();
 
     mouse.currentX = e.pageX; //获取鼠标移动后的坐标
@@ -72,6 +72,6 @@ function handlDrop(e) {
     shieldContainer.style.top = bar.top + disY + 'px';
 
     // body 移除监听 ShieldBar的拖放
-    document.body.removeEventListener('dragover', handleDragover);
-    document.body.removeEventListener('drop', handlDrop);
+    document.body.removeEventListener('dragover', _handleDragover);
+    document.body.removeEventListener('drop', _handleDrop);
 } 

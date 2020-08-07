@@ -1,4 +1,4 @@
-function parse(sbtStr, type) {
+export function parse(sbtStr, type) {
     switch (type) {
         case 'ass': return parseAss(sbtStr);
         case 'srt': return parseSrt(sbtStr);
@@ -22,11 +22,11 @@ function parseAss(subtitle) {
             if ( /\,{2}\{/g.test(dialogue) ) return; // remove lines with '{\xxx'
 
             // parse times
-            slots = dialogue.match(/\d\:\d{2}\:\d{2}\.\d+/g);
+            const slots = dialogue.match(/\d\:\d{2}\:\d{2}\.\d+/g);
             if (slots.length !== 2) throw Error('匹配出错！');
 
             // parse texts
-            text = dialogue
+            const text = dialogue
                 .replace(/Dialogue.*,,/g, '')
                 .replace(/\r\n/g, '')
                 .split(/(\\N|\{.*\})/g);

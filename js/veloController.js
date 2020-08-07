@@ -1,3 +1,5 @@
+import { player } from './global.js';
+
 // controller
 let veloChangeTimer = null;
 const velocity = document.getElementById('velocity');

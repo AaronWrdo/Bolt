@@ -1,5 +1,8 @@
-const player = document.getElementById("video");
-const trans = document.getElementsByClassName("transcripts")[0];
+import { player, trans } from './js/global.js';
+import { parse } from './js/parseSubtitle.js';
+import { onVideoLoaded, onVideoAndTransLoaded } from './js/bindListeners.js';
+
+
 let subtitleList = [];
 
 init();
@@ -36,7 +39,7 @@ function handleFile(file) {
                 const sbtStr = this.result;
                 subtitleList = parse(sbtStr, fileType); // 解析文件内容，获得字幕 list
                 appendSubtitleNodes(subtitleList); // 挂载字幕节点
-                if (player.src) onVideoAndTransLoaded();
+                if (player.src) onVideoAndTransLoaded(subtitleList);
             }
         }; break;
 
@@ -47,7 +50,7 @@ function handleFile(file) {
             onVideoLoaded();
             const title = document.getElementById('title');
             title.textContent = fileName;
-            if (subtitleList.length > 0) onVideoAndTransLoaded();
+            if (subtitleList.length > 0) onVideoAndTransLoaded(subtitleList);
         }; break;
 
         default: window.alert('不支持的文件类型！');
