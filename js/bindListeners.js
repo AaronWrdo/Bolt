@@ -7,35 +7,42 @@ let ankerSubtitleTimer = null;
 let activeNodeIndex = -1;
 const subListener = document.getElementById('choose-sub');
 const addShieldBtn = document.getElementById('addShield');
+
 let subtitleList = [];
+
+// 循环
+let loopFrom, loopTo; // 循环起终点
+const loop_from = document.getElementById('loop_from');
+const loop_to = document.getElementById('loop_to');
+
 
 export function onVideoLoaded() {
     addShieldBtn.addEventListener('click', handleAddShield)
-    // document.addEventListener('keydown', _handleVideoShortcut);
+    document.addEventListener('keydown', _handleVideoShortcut);
 }
 
 export function onVideoAndTransLoaded(subtitles) {
     subtitleList = subtitles;
 
-    trans.addEventListener('click', _onClickTranscript);
-    trans.addEventListener('dblclick', _onDoubleClickTranscript);
+    // trans.addEventListener('click', _onClickTranscript);
+    // trans.addEventListener('dblclick', _onDoubleClickTranscript);
     trans.addEventListener('contextmenu', _onClickTranscriptWithRightKey);
 
     player.addEventListener('play', _onPlayerPlay);
     player.addEventListener('pause', _onPlayerPause);
 
+    // 需要subtitle list，暂时放这里
     document.addEventListener('keydown', _handleTranscriptShortcut);
-    document.addEventListener('keydown', _handleVideoShortcut); // 需要subtitle list，暂时放这里
 
-    subListener.addEventListener('click', chooseSubtitle);
+    subListener.addEventListener('click', _chooseSubtitle);
 
-    if (!player.paused) {
-        ankerSubtitle();
-        if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
-        ankerSubtitleTimer = setInterval(() => ankerSubtitle(), 1000);
-    }
+    if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
+    ankerSubtitleTimer = setInterval(() => {
+        _ankerSubtitle(); // 定位字幕
+    }, 1000);
 }
 
+// 点击播放该句子（暂时去掉）
 function _onClickTranscript(e) {
     if (clickTimer) clearTimeout(clickTimer);
     clickTimer = setTimeout(play, 300);
@@ -75,16 +82,16 @@ function _onClickTranscriptWithRightKey(e) {
 }
 
 function _onPlayerPlay() {
-    ankerSubtitle();
+    _ankerSubtitle();
     if (ankerSubtitleTimer) clearInterval(ankerSubtitleTimer);
-    ankerSubtitleTimer = setInterval(() => ankerSubtitle(), 1000);
+    ankerSubtitleTimer = setInterval(() => _ankerSubtitle(), 1000);
 }
 
 function _onPlayerPause() {
     clearInterval(ankerSubtitleTimer);
 }
 
-function ankerSubtitle() {
+function _ankerSubtitle() {
     const curTime = player.currentTime;
     subtitleList.map((item, index) => {
         const node = document.getElementById(item.from);
@@ -108,62 +115,121 @@ function ankerSubtitle() {
 
 function _handleVideoShortcut(event) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
+    if (!e) return;
 
-    // 按 d D
-    if (e && e.keyCode == 68) {
-        if (!player.paused) player.pause();
-        else player.play();
-    }
+    switch(e.keyCode) {
+        // 按 E 暂停
+        case 69: {
+            if (!player.paused) player.pause();
+            else player.play();
+        }; break;
 
-     // 按 s S
-    if (e && e.keyCode == 83) {
-        if (activeNodeIndex > 0) {
-            player.currentTime = subtitleList[activeNodeIndex-1].from;
-            activeNodeIndex--;
-        }
-        else if (activeNodeIndex == 0) {
-            player.currentTime = subtitleList[activeNodeIndex].from;
-        }
-        player.play();
-    }
+        // 按 W 回退2秒
+        case 87: {
+            player.currentTime -= 2;
+        }; break;
 
-    // 按 f F
-    if (e && e.keyCode == 70) {
-        if (activeNodeIndex < subtitleList.length) {
-            player.currentTime = subtitleList[activeNodeIndex + 1].from;
-            activeNodeIndex++;
+        // 按 R 前进2秒
+        case 82: {
+            player.currentTime += 2;
+        }; break;
+
+        // '1' 设置循环起点
+        case 49: {
+            loopFrom = player.currentTime;
+            _bindAnkerLooper();
+        }; break;
+
+        // '2' 设置循环终点
+        case 50: {
+            loopTo = player.currentTime;
+            _bindAnkerLooper();
+        }; break;
+
+        // '3' 取消循环
+        case 51: {
+            loopFrom = undefined;
+            loopTo = undefined;
+            _bindAnkerLooper();
+        }; break;
+
+        // 无论如何都播放
+        case 87: case 82: {
+            player.play();
         }
-        else if (activeNodeIndex == subtitleList.length) {
-            player.currentTime = subtitleList[activeNodeIndex].from;
-        }
-        player.play();
     }
 }
 
 function _handleTranscriptShortcut(e) {
     var e = event || window.event || arguments.callee.caller.arguments[0];
+    if (!e) return;
 
-    // 按 e E
-    if (e && e.keyCode == 69 && activeNodeIndex > 0) {
-        player.currentTime = subtitleList[activeNodeIndex].from;
-    }
+    switch(e.keyCode) {
+        // 按 D 暂停
+           case 68: {
+            if (!player.paused) player.pause();
+            else player.play();
+            
+            // (暂时弃用) 播放该句
+            // if (activeNodeIndex > 0) player.currentTime = subtitleList[activeNodeIndex].from;
+        }; break;
 
-    // 按 w W
-    if (e && e.keyCode == 87) {
-        player.currentTime -= 2;
-    }
+        // 按 S 播放上一句
+        case 83: {
+            if (activeNodeIndex > 0) {
+                player.currentTime = subtitleList[activeNodeIndex-1].from;
+                activeNodeIndex--;
+            }
+            else if (activeNodeIndex == 0) {
+                player.currentTime = subtitleList[activeNodeIndex].from;
+            }
+            player.play();
+        }; break;
 
-    // 按 r R
-    if (e && e.keyCode == 82) {
-        player.currentTime += 2;
-    }
-
-    if ( e && e.keyCode == 69 || e.keyCode == 87 || e.keyCode == 82) {
-        player.play();
+        // 按 F 播放下一句
+        case 70: {
+            if (activeNodeIndex < subtitleList.length) {
+                player.currentTime = subtitleList[activeNodeIndex + 1].from;
+                activeNodeIndex++;
+            }
+            else if (activeNodeIndex == subtitleList.length) {
+                player.currentTime = subtitleList[activeNodeIndex].from;
+            }
+            player.play();
+        }; break;
     }
 }
 
+function _secsToMinSec(seconds) {
+    const min = parseInt(seconds / 60);
+    const sec = parseInt(seconds % 60);
+    return `${min} : ${sec}`;
+}
 
-function chooseSubtitle(e) {
+function _chooseSubtitle(e) {
     console.log(e);
+}
+
+// 设置 "起止区间" 后调用
+let ankerLoopTimer = null;
+function _bindAnkerLooper() {
+    if (loopFrom > loopTo) {
+        loopFrom = undefined;
+        loopTo = undefined;
+    }
+
+    // 为 from 和 to 设置默认值
+    loopFrom = loopFrom || 0;
+    loopTo = loopTo || player.duration;
+
+    // 设置显示的区间
+    loop_from.textContent = _secsToMinSec(loopFrom);
+    loop_to.textContent = _secsToMinSec(loopTo);
+
+    if (ankerLoopTimer) clearInterval(ankerLoopTimer);
+    ankerLoopTimer = setInterval(() => {
+        if (!player.play) return;
+        if (player.currentTime > loopTo) player.currentTime = loopFrom;
+        if (player.currentTime < loopFrom) player.currentTime = loopFrom;
+    }, 1000);
 }

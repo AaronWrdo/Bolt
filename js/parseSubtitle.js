@@ -41,6 +41,8 @@ function parseAss(subtitle) {
                     'text2': texts[1] || '',
                 }
             ];
+            // 解决字幕乱序问题
+            lines.sort((a, b) => (a.from > b.from));
         });
         return lines;
     } catch (e) {

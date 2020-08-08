@@ -74,16 +74,22 @@
                                         <input type="checkbox">字幕1</input>
                                         <input type="checkbox">字幕2</input>
                                 </div>
-                        </form>
+                        </div>
+                        <div class="changeDiv">
+                                循环起: <div id="loop_from"></div>
+                        </div>
+                        <div class="changeDiv">
+                                循环终: <div id="loop_to"></div>
+                        </div>
                 </footer>
                 <input id="file" type="file" accept=".mp4, .ass"/>
+
                 <script type="module" src="./js/shieldBar.js"></script>
                 <script type="module" src="main.js"></script>
                 <script type="module" src="./js/global.js"></script>
                 <script type="module" src="./js/parseSubtitle.js"></script>
-                <script type="module" src="./js/veloController.js"></script>
+                <script type="module" src="./js/controlVelocity.js"></script>
                 <script type="module" src="./js/bindListeners.js"></script>
-                <script type="module" src="./js/iconfont.js"></script>
-                
+                <script type="module" src="./assets/iconfont.js"></script>
         </body>
 </html>
