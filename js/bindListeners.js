@@ -9,6 +9,7 @@ const subListener = document.getElementById('choose-sub');
 const addShieldBtn = document.getElementById('addShield');
 
 let subtitleList = [];
+let markedSubtitleList = [];
 
 // 循环
 let loopFrom, loopTo; // 循环起终点
@@ -24,7 +25,7 @@ export function onVideoLoaded() {
 export function onVideoAndTransLoaded(subtitles) {
     subtitleList = subtitles;
 
-    // trans.addEventListener('click', _onClickTranscript);
+    trans.addEventListener('click', _onClickTranscript);
     // trans.addEventListener('dblclick', _onDoubleClickTranscript);
     trans.addEventListener('contextmenu', _onClickTranscriptWithRightKey);
 
@@ -42,33 +43,50 @@ export function onVideoAndTransLoaded(subtitles) {
     }, 1000);
 }
 
-// 点击播放该句子（暂时去掉）
 function _onClickTranscript(e) {
-    if (clickTimer) clearTimeout(clickTimer);
-    clickTimer = setTimeout(play, 300);
-    function play() {
-        e.preventDefault();
-        e.stopPropagation();
-        const id = e.target.id || e.target.parentNode.id;
+    // e.preventDefault();
+    // e.stopPropagation();
+    if (!e.target.id) return;
 
-        subtitleList.map((item, index) => {
-            const node = document.getElementById(item.from);
-            if (!node) return;
+    // 根据 id 判断点击的是哪个 icon
+    const sentenceId = e.target.parentNode.nextElementSibling.id;
+    switch (e.target.id) {
+        // 播放句子
+        case 'sub-play-btn': {
+            if (clickTimer) clearTimeout(clickTimer);
+            clickTimer = setTimeout(_play, 300, sentenceId);
+        }; break;
+        // 标记句子
+        case 'sub-mark-btn': {
+            // todo: 需要重构元素的 id 和 dataset
+            const index = e.target.parentNode.nextElementSibling.dataset.index;
 
-            // 激活当前点击的节点
-            if (item.from == id) {
-                node.className = 'active';
-                node.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
-                activeNodeIndex = index;
-            } else {
-                // 否则删除激活标记
-                node.className = '';
-            }
-        });
-
-        player.currentTime = parseFloat(id);
-        player.play();
+            let mIndex = markedSubtitleList.indexOf(index); // 在 marked 数组里找该有无该句子
+            if (mIndex === -1) markedSubtitleList.push(index); // 无则加入
+            else markedSubtitleList.splice(mIndex, 1); // 有则删除
+            console.log(markedSubtitleList);
+        }; break;
     }
+}
+
+function _play(id) {
+    subtitleList.map((item, index) => {
+        const node = document.getElementById(item.from);
+        if (!node) return;
+
+        // 激活当前点击的节点
+        if (item.from == id) {
+            node.className = 'active';
+            node.scrollIntoView({behavior: "smooth", block: "center", inline: "start"});
+            activeNodeIndex = index;
+        } else {
+            // 否则删除激活标记
+            node.className = '';
+        }
+    });
+
+    player.currentTime = parseFloat(id);
+    player.play();
 }
 
 function _onDoubleClickTranscript() {

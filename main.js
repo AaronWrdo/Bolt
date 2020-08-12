@@ -75,12 +75,23 @@ const appendSubtitleNodes = (subtitles) => {
         const len = subtitleList.length;
         if (item.text1.length == 0 && item.text2.length == 0) subtitleHtmlStr += '';
         else subtitleHtmlStr += (
-            `<div id='${item.from}'>
-                <div class="major-subtitle">
-                    ${item.text2}
+            `<div>
+                <div class="subtitle-left">
+                    <svg id="sub-play-btn" class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-dianying"></use>
+                    </svg>
+                    <svg id="sub-mark-btn" class="icon" aria-hidden="true">
+                        <use xlink:href="#icon-dianying"></use>
+                    </svg>
                 </div>
-                <div class="minor-subtitle">
-                    ${item.text1}(${(index+1)}/${len})
+
+                <div id='${item.from}' data-index="${index}">
+                    <div class="major-subtitle">
+                        ${item.text2}
+                    </div>
+                    <div class="minor-subtitle">
+                        ${item.text1}(${(index+1)}/${len})
+                    </div>
                 </div>
             </div>`
         );
