@@ -75,13 +75,13 @@ const appendSubtitleNodes = (subtitles) => {
         const len = subtitleList.length;
         if (item.text1.length == 0 && item.text2.length == 0) subtitleHtmlStr += '';
         else subtitleHtmlStr += (
-            `<div>
+            `<div class="subtitle-line">
                 <div class="subtitle-left">
-                    <svg id="sub-play-btn" class="icon" aria-hidden="true">
-                        <use xlink:href="#icon-dianying"></use>
+                    <svg id="sub-play-btn" class="icon ${markedSubtitleList.includes(index) && 'marked'}" aria-hidden="true">
+                        <use xlink:href="#icon-play--outline"></use>
                     </svg>
                     <svg id="sub-mark-btn" class="icon" aria-hidden="true">
-                        <use xlink:href="#icon-dianying"></use>
+                        <use xlink:href="#icon-shoucang"></use>
                     </svg>
                 </div>
 

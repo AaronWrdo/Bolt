@@ -113,6 +113,26 @@ video
 /* 
 .transcripts 
 */
+.subtitle-line {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.subtitle-left {
+    height: 100%;
+    margin-right: 14px;
+}
+
+.subtitle-left > * {
+    margin-right: 4px;
+    font-size: 20px;
+}
+
+.subtitle-left > *:hover {
+    color: #40a9ff;
+}
+
 .transcripts {
     width: 40%;
     height: 100%;
